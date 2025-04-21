@@ -1,12 +1,14 @@
 'use client'
 
-import HeaderAuthButtons from '@/app/components/buttons/HeaderAuthButtons'
-import SidebarContent from './sidebarContent'
 import { useState, useEffect } from 'react'
+import HeaderAuthButtons from '@/app/components/buttons/HeaderAuthButtons'
 import { StravaActivity } from '@/app/types/stravaActivity'
+import SidebarContent from './sidebarContent'
+import AiSuggestion from './aiSuggestion'
 
 export default function ClientDashboard() {
   const [activities, setActivities] = useState<StravaActivity[]>([])
+  const [suggestion, setSuggestion] = useState<string | null>(null)
   const [page, setPage] = useState(1)
 
   useEffect(() => {
@@ -14,6 +16,14 @@ export default function ClientDashboard() {
       .then((res) => res.json())
       .then((data) => setActivities(data))
   }, [page])
+
+  useEffect(() => {
+    if (activities.length > 0) {
+      fetch(`/api/ai-suggestions`)
+        .then((res) => res.json())
+        .then((data) => setSuggestion(data.suggestion))
+    }
+  }, [activities])
 
   const loadMoreAction = () => setPage(page + 1)
   return (
@@ -24,19 +34,14 @@ export default function ClientDashboard() {
         </div>
         <HeaderAuthButtons />
       </nav>
-      <div className="flex gap-4 p-8">
+      <div className="flex gap-4 p-4">
         {/* Left-hand side: Activities list */}
         <SidebarContent
           activities={activities}
           loadMoreAction={loadMoreAction}
         />
         {/* Right-hand side: Main content section */}
-        <div className="w-2/3 bg-gray-900 p-8 rounded-md">
-          <h3 className="text-xl font-bold text-white">Main Content</h3>
-          <p className="text-gray-400">
-            This section is reserved for additional content coming later.
-          </p>
-        </div>
+        <AiSuggestion suggestion={suggestion} />
       </div>
     </>
   )
