@@ -6,12 +6,14 @@ interface AiSuggestionProps {
 
 export default function AiSuggestion({ suggestion }: AiSuggestionProps) {
   return (
-    <div className="w-2/3 bg-gray-900 p-8 rounded-md">
-      <h3 className="text-xl font-bold text-white">AI Suggestion</h3>
+    <div className="w-full p-8 min-h-8 rounded-md bg-white">
+      <h3 className="text-xl font-bold text-gray-900 pb-2">AI Suggestion</h3>
       {suggestion ? (
-        <ReactMarkdown>{suggestion}</ReactMarkdown>
+        <div className="prose-sm">
+          <ReactMarkdown>{suggestion}</ReactMarkdown>
+        </div>
       ) : (
-        <p className="text-gray-400">Loading...</p>
+        <div className="h-16 bg-gray-200 animate-pulse rounded-md"></div>
       )}
     </div>
   )

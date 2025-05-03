@@ -56,6 +56,22 @@ export interface StravaActivity {
   has_kudoed: boolean
 }
 
+export type MainActivityDataPoints = Pick<
+  StravaActivity,
+  | 'distance'
+  | 'moving_time'
+  | 'average_speed'
+  | 'total_elevation_gain'
+  | 'average_heartrate'
+  | 'weighted_average_watts'
+  | 'average_cadence'
+  | 'pr_count'
+  | 'achievement_count'
+  | 'trainer'
+  | 'sport_type'
+  | 'start_date_local'
+>
+
 export interface Athlete {
   id: number
   resource_state: number

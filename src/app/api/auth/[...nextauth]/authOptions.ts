@@ -19,11 +19,17 @@ export const authOptions = {
       if (account?.access_token) {
         token.access_token = account.access_token
       }
+      if (account?.athlete) {
+        token.athlete = account.athlete
+      }
       return token
     },
     async session({ session, token }) {
       if (token.access_token) {
         session.access_token = token.access_token
+      }
+      if (token.athlete) {
+        session.athlete = token.athlete
       }
 
       return session

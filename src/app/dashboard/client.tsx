@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react'
 import HeaderAuthButtons from '@/app/components/buttons/HeaderAuthButtons'
 import { StravaActivity } from '@/app/types/stravaActivity'
-import SidebarContent from './sidebarContent'
+import ActivitiesList from './ActivitiesList'
 import AiSuggestion from './aiSuggestion'
+import Profile from './Profile'
 
 export default function ClientDashboard() {
   const [activities, setActivities] = useState<StravaActivity[]>([])
@@ -14,7 +15,7 @@ export default function ClientDashboard() {
   useEffect(() => {
     fetch(`/api/activities?page=${page}`)
       .then((res) => res.json())
-      .then((data) => setActivities(data))
+      .then((data) => setActivities([...activities, ...data]))
   }, [page])
 
   useEffect(() => {
@@ -26,22 +27,24 @@ export default function ClientDashboard() {
   }, [activities])
 
   const loadMoreAction = () => setPage(page + 1)
+
   return (
     <>
-      <nav className="flex items-center justify-between p-4">
-        <div className="text-2xl font-bold text-white sm:truncate sm:text-3xl sm:tracking-tight">
-          Strava AI Coach
+      <nav className="flex items-center justify-between p-2 border-b-gray-300 bg-white">
+        <div className="text-xl font-bold text-[#FC4C02] sm:truncate sm:text-3xl sm:tracking-tight">
+          Strava AI
         </div>
         <HeaderAuthButtons />
       </nav>
-      <div className="flex gap-4 p-4">
-        {/* Left-hand side: Activities list */}
-        <SidebarContent
+      <div className=" mt-8 flex w-full gap-4 p-4">
+        <div className="w-1/3 flex flex-col gap-4">
+          <Profile />
+          <AiSuggestion suggestion={suggestion} />
+        </div>
+        <ActivitiesList
           activities={activities}
           loadMoreAction={loadMoreAction}
         />
-        {/* Right-hand side: Main content section */}
-        <AiSuggestion suggestion={suggestion} />
       </div>
     </>
   )

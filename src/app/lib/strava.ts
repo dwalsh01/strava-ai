@@ -7,7 +7,7 @@ interface GetActivitiesProps {
   perPage?: number
 }
 
-const SHOULD_SKIP = false // process.env.NODE_ENV === 'development'
+const SHOULD_SKIP = false
 
 export async function getActivities({
   accessToken,
@@ -38,5 +38,10 @@ export async function getActivities({
     throw new Error('Failed to fetch activities')
   }
 
-  return (await res.json()) as StravaActivity[]
+  const data = (await res.json()) as StravaActivity[]
+
+  // Filter out activities that are not runs
+  const filteredData = data.filter((activity) => activity.type === 'Run')
+
+  return filteredData
 }
