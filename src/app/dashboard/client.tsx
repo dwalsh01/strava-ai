@@ -15,7 +15,7 @@ export default function ClientDashboard() {
   useEffect(() => {
     fetch(`/api/activities?page=${page}`)
       .then((res) => res.json())
-      .then((data) => setActivities([...activities, ...data]))
+      .then((data) => setActivities((prevState) => [...prevState, ...data]))
   }, [page])
 
   useEffect(() => {

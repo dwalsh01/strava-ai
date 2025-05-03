@@ -45,13 +45,14 @@ export const formatActivitiesForAI = (
   }
 }
 function calculateAverageSpeedinMinPerKm(activities: StravaActivity[]): string {
-  const totalPacePerKmInSeconds = activities.reduce((_, curr) => {
-    return (curr.moving_time * 1000) / curr.distance
-  }, 0)
-  const average = totalPacePerKmInSeconds / activities.length
-  const paceMinutes = Math.floor(average / 60)
-  const paceSeconds = Math.round(average % 60)
-  return `${paceMinutes}:${paceSeconds}/km`
+  const totalTime = activities.reduce((sum, a) => sum + a.moving_time, 0) // seconds
+  const totalDistance = activities.reduce((sum, a) => sum + a.distance, 0) // meters
+
+  if (totalDistance === 0) return '0/km'
+  const avgMinPerKm = (totalTime / totalDistance) * 16.6667 // 1000 / 60 = 16.6667
+  const minutes = Math.floor(avgMinPerKm)
+  const seconds = Math.round((avgMinPerKm - minutes) * 60)
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`
 }
 
 function calculateAverageHeartRate(activities: StravaActivity[]): number {
